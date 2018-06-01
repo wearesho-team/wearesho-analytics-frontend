@@ -42,12 +42,12 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
         });
     }
 
-    public init = (fingerprintFallback?: FingerprintFallback): void | never => {
+    public init = async (fingerprintFallback?: FingerprintFallback): Promise<void> | never => {
         if (document.readyState.toLowerCase() === "loading") {
             throw new Error("Preventing initialize BobraAnalytics before page ready");
         }
 
-        this.fingerprint = fingerprintGenerator(BobraAnalytics.fingerprintCacheKey, fingerprintFallback);
+        this.fingerprint = await fingerprintGenerator(BobraAnalytics.fingerprintCacheKey, fingerprintFallback);
 
         this.axios.defaults.headers["X-Bobra-Identifier"] = this.fingerprint.token;
 
