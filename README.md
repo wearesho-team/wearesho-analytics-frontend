@@ -41,6 +41,8 @@ const config = {
 analytics.sendActionHandler("event", config)();
 ```
 
+##### NOTE: sendActionHandler() return Promise
+
 ### Generic
 
 If you want specify config for action event, pass it to generic arguments on instantiating

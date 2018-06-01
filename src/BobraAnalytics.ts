@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosError } from "axios";
+import { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 
 import { Fingerprint, FingerprintFallback, fingerprintGenerator } from "./fingerprintGenerator";
 
@@ -7,7 +7,7 @@ export interface ActionConfig {
 }
 
 export interface BobraAnalyticsInterface<TActionConfig> {
-    sendActionHandler: (type: string, config: TActionConfig) => () => Promise<void>;
+    sendActionHandler: (type: string, config: TActionConfig) => () => Promise<AxiosResponse<void>>;
     init: (fingerprintFallback?: (error: string) => void) => void | never;
 }
 
@@ -30,11 +30,11 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
         this.sendViewDelay = viewDelay;
 
         this.axios.interceptors.response.use(undefined, (error: AxiosError) => {
-            if (!error.response || !error.response.status) {
+            if (!error.response || !error.response.data) {
                 throw error;
             }
 
-            if (error.response.status === ERROR_CODE_UNKNOWN) {
+            if (error.response.status === 400 && error.response.data.code === ERROR_CODE_UNKNOWN) {
                 return this.sendFingerprint();
             }
 
@@ -56,8 +56,8 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
         this.watch();
     }
 
-    public sendActionHandler = (type: string, config: TActionConfig) => async (): Promise<void> => {
-        await this.axios.post(`/action?type=${type}`, config);
+    public sendActionHandler = (type: string, config: TActionConfig) => async (): Promise<AxiosResponse<void>> => {
+        return await this.axios.post(`/action?type=${type}`, config);
     }
 
     private sendView = async (): Promise<void> => {
