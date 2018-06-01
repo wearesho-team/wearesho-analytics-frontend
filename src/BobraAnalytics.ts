@@ -57,15 +57,15 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
     }
 
     public sendActionHandler = (type: string, config: TActionConfig) => async (): Promise<AxiosResponse<void>> => {
-        return await this.axios.post(`/action?type=${type}`, config);
+        return await this.axios.post(`/analytics/action?type=${type}`, config);
     }
 
     private sendView = async (): Promise<void> => {
-        await this.axios.get(`/pageView?at=${this.timestamp}`);
+        await this.axios.get(`/analytics/page-view?at=${this.timestamp}`);
     }
 
     private sendFingerprint = async (): Promise<void> => {
-        await this.axios.post("/fingerPrint", this.fingerprint.components);
+        await this.axios.post("/analytics/finger-print", this.fingerprint.components);
     }
 
     private watch = async (): Promise<void> => {
