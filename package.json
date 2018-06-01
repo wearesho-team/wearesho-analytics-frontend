@@ -1,0 +1,41 @@
+{
+  "name": "@bobra/analytics-frontend",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "typings": "src/index.ts",
+  "description": "",
+  "scripts": {
+    "lint": "./node_modules/.bin/tslint --project ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wearesho-team/bobra-analytics-frontend.git"
+  },
+  "keywords": [
+    "analytics",
+    "typescript"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/wearesho-team/bobra-analytics-frontend/issues"
+  },
+  "homepage": "https://github.com/wearesho-team/bobra-analytics-frontend#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.47",
+    "axios": "^0.18.0",
+    "pre-commit": "^1.2.2",
+    "ts-node": "^3.3.0",
+    "tslint": "5.6.0",
+    "typescript": "^2.7.2"
+  },
+  "peerDependencies": {
+    "axios": "^0.18.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.horatius.pro"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
