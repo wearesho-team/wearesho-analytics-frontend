@@ -1,48 +1,71 @@
-import Fingerprint2 from "fingerprintjs2";
-import Axios, { AxiosInstance } from "axios";
+import { AxiosInstance, AxiosError } from "axios";
 
-export interface BobraAnalyticsInterface {
-    sendActionHandler: (type: string) => () => Promise<void>;
+import { Fingerprint, FingerprintFallback, fingerprintGenerator } from "./fingerprintGenerator";
+
+export interface ActionConfig {
+    [key: string]: string | number | boolean | ActionConfig;
 }
 
-export class BobraAnalytics implements BobraAnalyticsInterface {
+export interface BobraAnalyticsInterface<TActionConfig> {
+    sendActionHandler: (type: string, config: TActionConfig) => () => Promise<void>;
+    init: (fingerprintFallback?: (error: string) => void) => void | never;
+}
+
+const ERROR_CODE_MISSING = 18001;
+const ERROR_CODE_INVALID = 18002;
+const ERROR_CODE_UNKNOWN = 18003;
+
+export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyticsInterface<TActionConfig> {
+    public static readonly fingerprintCacheKey = "BobraAnalytics.fingerprint";
+
     private timeoutId: any;
     private timestamp: number;
-    private fingerprint: string;
     private axios: AxiosInstance;
     private sendViewDelay: number;
     private currentLocation: string;
+    private fingerprint: Fingerprint;
 
-    constructor(viewDelay: number = 5000, fingerprintFallback?: (error: string) => void) {
-        try {
-            (new Fingerprint2()).get((result) => {
-                this.fingerprint = result;
-            });
-        } catch (error) {
-            fingerprintFallback && fingerprintFallback(error);
-            this.fingerprint = btoa((new Date()).toISOString());
-        }
-
-        this.axios = Axios.create({});
-
+    constructor(axiosInstance: AxiosInstance, viewDelay: number = 5000) {
+        this.axios = axiosInstance;
         this.sendViewDelay = viewDelay;
-        this.sendFingerprint();
+
+        this.axios.interceptors.response.use(undefined, (error: AxiosError) => {
+            if (!error.response || !error.response.status) {
+                throw error;
+            }
+
+            if (error.response.status === ERROR_CODE_UNKNOWN) {
+                return this.sendFingerprint();
+            }
+
+            throw error;
+        });
     }
 
-    public sendActionHandler = (type: string) => async (): Promise<void> => {
-        // await this.axios.get(`/action?type=${type}`);
+    public init = (fingerprintFallback?: FingerprintFallback): void | never => {
+        if (document.readyState.toLowerCase() === "loading") {
+            throw new Error("Preventing initialize BobraAnalytics before page ready");
+        }
+
+        this.fingerprint = fingerprintGenerator(BobraAnalytics.fingerprintCacheKey, fingerprintFallback);
+
+        this.axios.defaults.headers["X-Bobra-Identifier"] = this.fingerprint.token;
+
+        this.initPage();
+        this.sendFingerprint();
+        this.watch();
+    }
+
+    public sendActionHandler = (type: string, config: TActionConfig) => async (): Promise<void> => {
+        await this.axios.post(`/action?type=${type}`, config);
     }
 
     private sendView = async (): Promise<void> => {
-        // await this.axios.get(`/pageView?at=${this.timestamp}`);
+        await this.axios.get(`/pageView?at=${this.timestamp}`);
     }
 
     private sendFingerprint = async (): Promise<void> => {
-        this.initPage();
-
-        // await this.axios.get("/fingerprint");
-
-        this.watch();
+        await this.axios.post("/fingerPrint", this.fingerprint.components);
     }
 
     private watch = async (): Promise<void> => {
@@ -53,7 +76,7 @@ export class BobraAnalytics implements BobraAnalyticsInterface {
         this.timeoutId = setTimeout(this.watch, this.sendViewDelay);
     }
 
-    private initPage = () => {
+    private initPage = (): void => {
         this.timestamp = Date.now();
         this.currentLocation = location.pathname;
     }

@@ -22,10 +22,9 @@
   },
   "homepage": "https://github.com/wearesho-team/bobra-analytics-frontend#readme",
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/fingerprintjs2": "^1.5.2",
     "@types/node": "^8.0.47",
-    "axios": "^0.18.0",
-    "fingerprintjs2": "^1.8.0",
     "pre-commit": "^1.2.2",
     "ts-node": "^3.3.0",
     "tslint": "5.6.0",
