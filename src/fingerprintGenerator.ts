@@ -7,7 +7,7 @@ export interface Fingerprint {
     token: string;
 }
 
-export function fingerprintGenerator(cacheKey: string, fingerprintFallback?: FingerprintFallback): Fingerprint {
+export async function fingerprintGenerator(cacheKey: string, fallback?: FingerprintFallback): Promise<Fingerprint> {
     const cacheFingerprint = JSON.parse(localStorage.getItem(cacheKey));
 
     if (cacheFingerprint) {
@@ -16,11 +16,14 @@ export function fingerprintGenerator(cacheKey: string, fingerprintFallback?: Fin
 
     let fingerprint: Fingerprint;
     try {
-        (new Fingerprint2()).get((token, components) => {
-            fingerprint = { token, components };
+        await new Promise((resolve) => {
+            (new Fingerprint2()).get((token, components) => {
+                fingerprint = { token, components };
+                return resolve();
+            });
         });
     } catch (error) {
-        fingerprintFallback && fingerprintFallback(error);
+        fallback && fallback(error);
         fingerprint = {
             token: btoa((Date.now() + Math.random()).toString().replace(/\./g, "")),
             components: [{ key: "user_agent", value: navigator.userAgent }]
