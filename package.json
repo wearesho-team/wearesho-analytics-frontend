@@ -25,6 +25,7 @@
     "@types/fingerprintjs2": "^1.5.2",
     "@types/node": "^8.0.47",
     "axios": "^0.18.0",
+    "fingerprintjs2": "^1.8.0",
     "pre-commit": "^1.2.2",
     "ts-node": "^3.3.0",
     "tslint": "5.6.0",
@@ -40,8 +41,6 @@
     "lint"
   ],
   "dependencies": {
-    "fingerprintjs2": "^1.8.0",
-    "install": "^0.11.0",
-    "npm": "^6.1.0"
+    "fingerprintjs2": "^1.8.0"
   }
 }
