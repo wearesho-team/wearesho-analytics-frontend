@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/wearesho-team/bobra-analytics-frontend#readme",
   "devDependencies": {
+    "@types/fingerprintjs2": "^1.5.2",
     "@types/node": "^8.0.47",
     "axios": "^0.18.0",
     "pre-commit": "^1.2.2",
@@ -37,5 +38,10 @@
   },
   "pre-commit": [
     "lint"
-  ]
+  ],
+  "dependencies": {
+    "fingerprintjs2": "^1.8.0",
+    "install": "^0.11.0",
+    "npm": "^6.1.0"
+  }
 }
