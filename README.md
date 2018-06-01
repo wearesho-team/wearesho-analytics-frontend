@@ -1,6 +1,8 @@
-## Bobra Analytics Frontend
+# Bobra Analytics Frontend
 
-#### Setup
+## Usage
+
+### Setup
 
 Create instance of BobraAnalytics with following params:
 
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 ```
 
-##### NOTE: If you try to initialize BobraAnalytics when document.readyState === "loading", error will be thrown
+*Note: If you try to initialize BobraAnalytics when document.readyState === "loading", error will be thrown*
 
 After that, analytics will be collecting automatically
 
@@ -41,9 +43,9 @@ const config = {
 analytics.sendActionHandler("event", config)();
 ```
 
-##### NOTE: sendActionHandler() return Promise
+*Note: sendActionHandler() return Promise*
 
-### Generic
+#### Generic
 
 If you want specify config for action event, pass it to generic arguments on instantiating
 
