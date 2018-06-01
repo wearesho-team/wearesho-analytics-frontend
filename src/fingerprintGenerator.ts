@@ -16,12 +16,8 @@ export async function fingerprintGenerator(cacheKey: string, fallback?: Fingerpr
 
     let fingerprint: Fingerprint;
     try {
-        await new Promise((resolve) => {
-            (new Fingerprint2()).get((token, components) => {
-                fingerprint = { token, components };
-                return resolve();
-            });
-        });
+        await new Promise((resolve) => (new Fingerprint2())
+            .get((token, components) => resolve(fingerprint = { token, components })));
     } catch (error) {
         fallback && fallback(error);
         fingerprint = {

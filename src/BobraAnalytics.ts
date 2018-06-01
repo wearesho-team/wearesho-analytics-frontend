@@ -42,7 +42,7 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
         });
     }
 
-    public init = async (fingerprintFallback?: FingerprintFallback): Promise<void> | never => {
+    public init = async (fingerprintFallback?: FingerprintFallback): Promise<AxiosResponse<void>> | never => {
         if (document.readyState.toLowerCase() === "loading") {
             throw new Error("Preventing initialize BobraAnalytics before page ready");
         }
@@ -52,28 +52,29 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
         this.axios.defaults.headers["X-Bobra-Identifier"] = this.fingerprint.token;
 
         this.initPage();
-        this.sendFingerprint();
-        this.watch();
+        return this.sendFingerprint().then(this.watch);
     }
 
-    public sendActionHandler = (type: string, config: TActionConfig) => async (): Promise<AxiosResponse<void>> => {
-        return await this.axios.post(`/analytics/action?type=${type}`, config);
+    public sendActionHandler = (type: string, config: TActionConfig) => (): Promise<AxiosResponse<void>> => {
+        return this.axios.post(`/analytics/action?type=${type}`, config);
     }
 
-    private sendView = async (): Promise<void> => {
-        await this.axios.get(`/analytics/page-view?at=${this.timestamp}`);
+    private sendView = (): Promise<AxiosResponse<void>> => {
+        return this.axios.get(`/analytics/page-view?at=${this.timestamp}`);
     }
 
-    private sendFingerprint = async (): Promise<void> => {
-        await this.axios.post("/analytics/finger-print", this.fingerprint.components);
+    private sendFingerprint = (): Promise<AxiosResponse<void>> => {
+        return this.axios.post("/analytics/finger-print", this.fingerprint.components);
     }
 
-    private watch = async (): Promise<void> => {
+    private watch = (): Promise<AxiosResponse<void>> => {
         location.pathname !== this.currentLocation && this.initPage();
 
-        await this.sendView();
-        clearTimeout(this.timeoutId);
-        this.timeoutId = setTimeout(this.watch, this.sendViewDelay);
+        return this.sendView().then((result) => {
+            clearTimeout(this.timeoutId);
+            this.timeoutId = setTimeout(this.watch, this.sendViewDelay);
+            return result;
+        });
     }
 
     private initPage = (): void => {
