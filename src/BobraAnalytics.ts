@@ -60,7 +60,9 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
     }
 
     private sendView = (): Promise<AxiosResponse<void>> => {
-        return this.axios.get(`/analytics/page-view?at=${this.timestamp}`);
+        return this.axios.post(`/analytics/page-view?at=${this.timestamp}`, {
+            now: this.createTimestamp
+        });
     }
 
     private sendFingerprint = (): Promise<AxiosResponse<void>> => {
@@ -78,7 +80,11 @@ export class BobraAnalytics<TActionConfig = ActionConfig> implements BobraAnalyt
     }
 
     private initPage = (): void => {
-        this.timestamp = Date.now();
+        this.timestamp = this.createTimestamp;
         this.currentLocation = location.pathname;
+    }
+
+    private get createTimestamp(): number {
+        return Math.round(Date.now() / 1000);
     }
 }
