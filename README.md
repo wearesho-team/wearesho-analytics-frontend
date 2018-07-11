@@ -12,12 +12,11 @@ const fingerPrintGenerator = (): Promise<{token: string, components: Array<{key:
     // some code
     return result;
 };
-const analytics = new WeareshoAnalytics(axiosInstance, fingerPrintGenerator, onError: (message: string) => console.error(message));
+const analytics = new WeareshoAnalytics(axiosInstance, fingerPrintGenerator);
 ```
 where
 - `axiosInstance` - instance of [Axios](https://github.com/axios/axios). Required.
 - `fingerPrintGenerator` - function that generate fingerPrint. Required.
-- `onError` - callback that calls on any request error. Optional.
 
 then initialize:
 
