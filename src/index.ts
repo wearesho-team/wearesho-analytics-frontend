@@ -1,1 +1,2 @@
-export * from "./BobraAnalytics";
+export * from "./WeareshoAnalytics";
+export * from "./interfaces";

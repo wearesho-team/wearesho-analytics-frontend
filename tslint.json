@@ -3,6 +3,8 @@
       "tslint:latest"
     ],
     "rules": {
+      "no-namespace": false,
+      "no-console": false,
       "no-empty-interface": true,
       "array-type": [true, "generic"],
       "variable-name": false,
