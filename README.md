@@ -12,7 +12,7 @@ const fingerPrintGenerator = (): Promise<{token: string, components: Array<{key:
     // some code
     return result;
 };
-const analytics = new WeaareshoAnalytics(axiosInstance, fingerPrintGenerator, onError: (message: string) => console.error(message));
+const analytics = new WeareshoAnalytics(axiosInstance, fingerPrintGenerator, onError: (message: string) => console.error(message));
 ```
 where
 - `axiosInstance` - instance of [Axios](https://github.com/axios/axios). Required.
