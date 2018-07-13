@@ -1,5 +1,5 @@
 {
-  "name": "@bobra/analytics-frontend",
+  "name": "@wearesho/analytics-frontend",
   "version": "1.0.4",
   "main": "src/index.ts",
   "typings": "src/index.ts",
@@ -9,18 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wearesho-team/bobra-analytics-frontend.git"
+    "url": "git+https://github.com/wearesho-team/wearesho-analytics-frontend.git"
   },
   "keywords": [
     "analytics",
     "typescript"
   ],
-  "author": "",
+  "author": "Wearesho",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/wearesho-team/bobra-analytics-frontend/issues"
+    "url": "https://github.com/wearesho-team/wearesho-analytics-frontend/issues"
   },
-  "homepage": "https://github.com/wearesho-team/bobra-analytics-frontend#readme",
+  "homepage": "https://github.com/wearesho-team/wearesho-analytics-frontend#readme",
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/fingerprintjs2": "^1.5.2",

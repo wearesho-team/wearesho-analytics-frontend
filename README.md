@@ -1,67 +1,51 @@
-# Bobra Analytics Frontend
+# Wearesho Analytics Frontend
 
 ## Usage
 
 ### Setup
 
-Create instance of BobraAnalytics with following params:
+Create instance of WeareshoAnalytics with following params:
 
 ```ts
-/*
-    viewDelay - frequency of sending info about page view, ms
-    axiosInstance - instance of Axios (https://github.com/axios/axios)
-*/
-constructor(axiosInstance: AxiosInstance, viewDelay: number = 5000)
+const axiosInstance = Axios.create({baseURL: "https://wearesho.public.api.com/"});
+const fingerPrintGenerator = (): Promise<{token: string, components: Array<{key: string; value: string}>}> => {
+    // some code
+    return result;
+};
+const analytics = new WeareshoAnalytics(axiosInstance, fingerPrintGenerator);
 ```
+where
+- `axiosInstance` - instance of [Axios](https://github.com/axios/axios). Required.
+- `fingerPrintGenerator` - function that generate fingerPrint. Required.
 
 then initialize:
 
 ```ts
-/*
-    fingerprintFallback - called when fingerprint does not supported by browser
-*/
-const analytics = new BobraAnalytics(axios, 1000);
-document.addEventListener("DOMContentLoaded", () => {
-    const fingerprintFallback = (error) => console.info("Fingerprint does not supports (" + error + ")");
-    analytics.init(fingerprintFallback);
-});
+analytics.init();
 ```
 
-*Note: If you try to initialize BobraAnalytics when document.readyState === "loading", error will be thrown*
-
-After that, analytics will be collecting automatically
-
-### Action
-
-To send user action, export BobraAnalytics instance globaly, and 
+### Actions
 
 ```ts
-const config = {
-    button: true,
-    buttonType: "submit"
-};
-analytics.sendActionHandler("event", config)();
+analytics.action("some unique action name");
 ```
 
-*Note: sendActionHandler() return Promise*
-
-#### Generic
-
-If you want specify config for action event, pass it to generic arguments on instantiating
+```ts
+analytics.input("fieldName", ["valuePrev", "valueNext"]);
+```
 
 ```ts
-interface ActionConfig {
-    button: boolean;
-    buttonType: string;
-    dataCollection: Array<string>;
-}
+analytics.user(1 /* UserId */);
+```
 
-const analytics = new BobraAnalytics<ActionConfig>(axios, 1000);
-// ...
-const config = {
-    button: true,
-    buttonType: "submit",
-    dataCollection: ["some", "data", "collection"]
-};
-analytics.sendActionHandler("event", config)();
+### Helpers
+
+```tsx
+const actionHandler = analytics.handler(analytics.action, "some unique action name");
+const inputHandler = analytics.handler(analytics.input, "fieldName", ["valuePrev", "valueNext"]);
+const userHandler = analytics.handler(analytics.input, 1);
+
+<button onClick={actionHandler}/>
+<button onClick={inputHandler}/>
+<button onClick={userHandler}/>
 ```
