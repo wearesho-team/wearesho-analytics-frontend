@@ -1,6 +1,6 @@
 {
   "name": "@wearesho/analytics-frontend",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "main": "src/index.ts",
   "typings": "src/index.ts",
   "description": "",
