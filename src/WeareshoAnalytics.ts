@@ -1,6 +1,6 @@
-import { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import { AxiosInstance, AxiosResponse } from "axios";
 
-import { Response, Request, FingerPrintGenerator } from "./interfaces";
+import { Response, Request, FingerPrintGenerator, FingerPrintComponents } from "./interfaces";
 
 export class WeareshoAnalytics {
     protected generateFingerPrint: FingerPrintGenerator;
@@ -8,7 +8,7 @@ export class WeareshoAnalytics {
     private axios: AxiosInstance;
     private fingerPrint: {
         token: string;
-        components: Array<{ key: string; value: string }>;
+        components: FingerPrintComponents;
     };
 
     constructor(axiosInstance: AxiosInstance, generateFingerPrint: FingerPrintGenerator) {
@@ -51,12 +51,6 @@ export class WeareshoAnalytics {
     }
 
     private registerFingerPrint = (): Promise<AxiosResponse> => {
-        const Body: Request.RegisterFingerPrint = {};
-
-        this.fingerPrint.components.forEach(({ key, value }) => {
-            Body[key] = value;
-        });
-
-        return this.axios.put<void>("/fingerPrint", Body);
+        return this.axios.put<void>("/fingerPrint", this.fingerPrint.components);
     }
 }

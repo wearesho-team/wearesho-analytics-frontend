@@ -10,10 +10,16 @@ export namespace Response {
 export namespace Request {
     export interface RegisterFingerPrint {
         [key: string]: string;
-    };
+    }
+}
+
+export interface FingerPrintComponents {
+    resolution: string;
+    timezone_offset: number;
+    [K: string]: any;
 }
 
 export type FingerPrintGenerator = () => Promise<{
     token: string;
-    components: Array<{ key: string; value: string }>;
+    components: FingerPrintComponents;
 }>;
