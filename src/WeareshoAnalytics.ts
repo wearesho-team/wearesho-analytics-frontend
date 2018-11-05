@@ -34,7 +34,7 @@ export class WeareshoAnalytics {
         });
     }
 
-    public input = (field: string, values: Array<string>): Promise<AxiosResponse> => {
+    public input = (field: string, values: Array<Array<string>>): Promise<AxiosResponse> => {
         return this.axios.put("/input", { values }, {
             params: { field }
         });
@@ -51,6 +51,12 @@ export class WeareshoAnalytics {
     }
 
     private registerFingerPrint = (): Promise<AxiosResponse> => {
-        return this.axios.put<void>("/fingerPrint", this.fingerPrint.components);
+        const Body: Request.RegisterFingerPrint = {};
+
+        this.fingerPrint.components.forEach(({ key, value }) => {
+            Body[key] = value;
+        });
+
+        return this.axios.put<void>("/fingerPrint", Body);
     }
 }
