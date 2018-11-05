@@ -51,12 +51,6 @@ export class WeareshoAnalytics {
     }
 
     private registerFingerPrint = (): Promise<AxiosResponse> => {
-        const Body: Request.RegisterFingerPrint = {};
-
-        this.fingerPrint.components.forEach(({ key, value }) => {
-            Body[key] = value;
-        });
-
-        return this.axios.put<void>("/fingerPrint", Body);
+        return this.axios.put<void>("/fingerPrint", this.fingerPrint.components);
     }
 }
