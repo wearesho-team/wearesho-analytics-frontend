@@ -34,7 +34,7 @@ export class WeareshoAnalytics {
         });
     }
 
-    public input = (field: string, values: Array<Array<string>>): Promise<AxiosResponse> => {
+    public input = (field: string, values: Array<{ value: string, createdAt: string }>): Promise<AxiosResponse> => {
         return this.axios.put("/input", { values }, {
             params: { field }
         });
