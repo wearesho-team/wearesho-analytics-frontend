@@ -28,20 +28,25 @@ export class WeareshoAnalytics {
         return this.registerFingerPrint();
     }
 
-    public action = (id: string | number): Promise<AxiosResponse> => {
-        return this.axios.put("/action", undefined, {
+    public action = (id: string | number): Promise<AxiosResponse<undefined>> => {
+        return this.axios.put<undefined>("/action", undefined, {
             params: { id }
         });
     }
 
-    public input = (field: string, values: Array<{ value: string, createdAt: string }>): Promise<AxiosResponse> => {
-        return this.axios.put("/input", { values }, {
+    public input = (
+        field: string,
+        values: Array<string | { value: string, createdAt?: string }>
+    ): Promise<AxiosResponse<undefined>> => {
+        return this.axios.put<undefined>("/input", {
+            values: values.map((value) => typeof value === "string" ? { value } : value),
+        }, {
             params: { field }
         });
     }
 
-    public user = (id: number): Promise<AxiosResponse> => {
-        return this.axios.put("/user", undefined, {
+    public user = (id: number): Promise<AxiosResponse<undefined>> => {
+        return this.axios.put<undefined>("/user", undefined, {
             params: { id }
         });
     }
@@ -50,7 +55,7 @@ export class WeareshoAnalytics {
         return action(...args);
     }
 
-    private registerFingerPrint = (): Promise<AxiosResponse> => {
-        return this.axios.put<void>("/fingerPrint", this.fingerPrint.components);
+    private registerFingerPrint = (): Promise<AxiosResponse<undefined>> => {
+        return this.axios.put<undefined>("/fingerPrint", this.fingerPrint.components);
     }
 }
