@@ -1,28 +1,39 @@
-# Wearesho Analytics Frontend
+# Wearesho Analytics
+
+## Installation
+
+```bash
+npm i --save @wearesho/analytics
+```
 
 ## Usage
 
 ### Setup
 
-Create instance of WeareshoAnalytics with following params:
+Create instance of [WeareshoAnalytics.Service](./src/Service.ts) with following params:
 
-```ts
+```typescript
+import * as WeareshoAnalytics from "@wearesho/analytics";
+
 const axiosInstance = Axios.create({baseURL: "https://wearesho.public.api.com/"});
+
+const token = ""; // your way to receive unique fingerprint value
+const components = {
+    resolution: "1920,1080",
+    offset: 3,
+    // ... other key/value pairs
+};
+
+const fingerPrint: FingerPrint = { token, components }
 const fingerPrintGenerator = (): Promise<{token: string, components: Array<{key: string; value: string}>}> => {
     // some code
     return result;
 };
-const analytics = new WeareshoAnalytics(axiosInstance, fingerPrintGenerator);
+const analytics = await WeareshoAnalytics.Service.create(axiosInstance, fingerPrint);
 ```
 where
 - `axiosInstance` - instance of [Axios](https://github.com/axios/axios). Required.
-- `fingerPrintGenerator` - function that generate fingerPrint. Required.
-
-then initialize:
-
-```ts
-analytics.init();
-```
+- `fingerPrint` - fingerprint data. Required.
 
 ### Actions
 
