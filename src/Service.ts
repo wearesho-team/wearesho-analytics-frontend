@@ -19,13 +19,16 @@ export interface FingerPrintComponents {
     [K: string]: any;
 }
 
-export type FingerPrintGenerator = () => Promise<{
+export interface FingerPrint {
     token: string;
     components: FingerPrintComponents;
-}>;
+}
 
-export class WeareshoAnalytics {
-    protected generateFingerPrint: FingerPrintGenerator;
+export class Service {
+
+    public static create(axios: AxiosInstance, fingerPrint: FingerPrint): Service {
+        return new Service(axios, fingerPrint);
+    }
 
     private axios: AxiosInstance;
     private fingerPrint: {
@@ -33,28 +36,25 @@ export class WeareshoAnalytics {
         components: FingerPrintComponents;
     };
 
-    constructor(axiosInstance: AxiosInstance, generateFingerPrint: FingerPrintGenerator) {
+    private constructor(axiosInstance: AxiosInstance, fingerPrint: FingerPrint) {
         this.axios = axiosInstance;
-
-        this.generateFingerPrint = generateFingerPrint;
+        this.fingerPrint = fingerPrint;
     }
 
     public init = async (): Promise<AxiosResponse> => {
-        this.fingerPrint = await this.generateFingerPrint();
-
         this.axios.defaults.headers["X-Bobra-Identifier"] = this.fingerPrint.token;
 
         const response: Response.AplicationInfo = await this.axios.get("/");
 
         console.info(`${response.data.name}: ${response.data.version}`);
         return this.registerFingerPrint();
-    }
+    };
 
     public action = (id: string | number): Promise<AxiosResponse<undefined>> => {
         return this.axios.put<undefined>("/action", undefined, {
             params: { id }
         });
-    }
+    };
 
     public input = (
         field: string,
@@ -65,17 +65,17 @@ export class WeareshoAnalytics {
         }, {
             params: { field }
         });
-    }
+    };
 
     public user = (id: number): Promise<AxiosResponse<undefined>> => {
         return this.axios.put<undefined>("/user", undefined, {
             params: { id }
         });
-    }
+    };
 
     public handler = (action: (...args) => Promise<AxiosResponse>, ...args) => (): Promise<AxiosResponse> => {
         return action(...args);
-    }
+    };
 
     private registerFingerPrint = (): Promise<AxiosResponse<undefined>> => {
         return this.axios.put<undefined>("/fingerPrint", this.fingerPrint.components);
