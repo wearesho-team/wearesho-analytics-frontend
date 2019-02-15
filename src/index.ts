@@ -1,2 +1,1 @@
-export * from "./WeareshoAnalytics";
-export * from "./interfaces";
+export * from "./Service";
