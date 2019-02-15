@@ -26,8 +26,8 @@ export interface FingerPrint {
 
 export class Service {
 
-    public static create(axios: AxiosInstance, fingerPrint: FingerPrint): Service {
-        return new Service(axios, fingerPrint);
+    public static create(axios: AxiosInstance, fingerPrint: FingerPrint): Promise<Service> {
+        return (new Service(axios, fingerPrint)).init();
     }
 
     private axios: AxiosInstance;
@@ -41,13 +41,19 @@ export class Service {
         this.fingerPrint = fingerPrint;
     }
 
-    public init = async (): Promise<AxiosResponse> => {
+    public init = async (): Promise<Service> => {
         this.axios.defaults.headers["X-Bobra-Identifier"] = this.fingerPrint.token;
 
         const response: Response.AplicationInfo = await this.axios.get("/");
+        if (!response.data.version.match(/^1\.\d+\.\d+$/)) {
+            throw new Error(`Version ${response.data.version} is not supported by current package version`);
+        }
 
         console.info(`${response.data.name}: ${response.data.version}`);
-        return this.registerFingerPrint();
+
+        await this.registerFingerPrint();
+
+        return this;
     };
 
     public action = (id: string | number): Promise<AxiosResponse<undefined>> => {

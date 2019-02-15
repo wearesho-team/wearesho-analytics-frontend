@@ -30,7 +30,7 @@ const config = {
         filename: 'index.js',
         path: path.resolve('./build'),
         publicPath: "/",
-        library: "@wearesho/analytics-frontend",
+        library: "@wearesho/analytics",
         libraryTarget: "umd",
     },
 
