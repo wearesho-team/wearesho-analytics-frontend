@@ -1,5 +1,5 @@
 {
-  "name": "@wearesho/analytics",
+  "name": "@sho-js/analytics",
   "version": "6.0.0",
   "description": "",
   "main": "build/index.js",

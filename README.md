@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-npm i --save @wearesho/analytics
+npm i --save @sho-js/analytics
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm i --save @wearesho/analytics
 Create instance of [WeareshoAnalytics.Service](./src/Service.ts) with following params:
 
 ```typescript
-import * as WeareshoAnalytics from "@wearesho/analytics";
+import * as WeareshoAnalytics from "@sho-js/analytics";
 
 const axiosInstance = Axios.create({baseURL: "https://wearesho.public.api.com/"});
 
